@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasky
+  namespace: wiz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasky
+  template:
+    metadata:
+      labels:
+        app: tasky
+    spec:
+      serviceAccountName: wiz-admin
+      containers:
+        - name: wiz-app
+          image: 539247471350.dkr.ecr.us-east-1.amazonaws.com/wiz-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI
+              value: mongodb://Alhaji:ravens25@ec2-98-81-231-58.compute-1.amazonaws.com:27017/?authSource=admin
+            - name: SECRET_KEY
+              value: secret123
+

@@ -1,0 +1,21 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: wiz-test
+  region: us-east-1
+
+vpc: 
+  id: "vpc-085eb1ed775368103"
+  cidr: "10.0.0.0/16"
+  subnets:
+    private:
+      us-east-1a: { id: subnet-09e27aa4bfa1dcb0d }
+      us-east-1b: { id: subnet-0fd7ebea60e32f7bb }
+
+nodeGroups:
+  - name: ng-1-workers
+    instanceType: t3.medium
+    desiredCapacity: 1
+    privateNetworking: true
+
+#https://eksctl.io/usage/creating-and-managing-clusters/#using-config-files
