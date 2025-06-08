@@ -1,0 +1,40 @@
+# .github/workflows/ci-build-push.yml
+name: Build and Push to ECR
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build Docker image
+      run: |
+        docker build -t wiz-app .
+        docker tag wiz-app:latest 539247471350.dkr.ecr.us-east-1.amazonaws.com/wiz-app:latest
+
+    - name: Scan with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: wiz-app:latest
+        format: 'table'
+
+    - name: Push image to ECR
+      run: |
+        docker push 539247471350.dkr.ecr.us-east-1.amazonaws.com/wiz-app:latest
+
