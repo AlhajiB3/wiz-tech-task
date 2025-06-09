@@ -26,5 +26,5 @@ jobs:
 
     - name: Apply Deployment
       run: |
-        kubectl apply -f k8s/tasky-deployment.yaml
+        kubectl apply -f Wiz-Task/tasky-deployment.yaml
         kubectl rollout status deployment tasky -n wiz
